@@ -1,7 +1,10 @@
 package miniplc0java.tokenizer;
 
+import com.google.common.primitives.UnsignedInteger;
+import jdk.jfr.Unsigned;
 import miniplc0java.error.TokenizeError;
 import miniplc0java.error.ErrorCode;
+import miniplc0java.util.Pos;
 
 public class Tokenizer {
 
@@ -47,7 +50,22 @@ public class Tokenizer {
         // 解析成功则返回无符号整数类型的token，否则返回编译错误
         //
         // Token 的 Value 应填写数字的值
-        throw new Error("Not implemented");
+
+        Pos startPos = it.nextPos();
+        UnsignedInteger value;
+
+        StringBuilder sb = new StringBuilder();
+        while (Character.isDigit(it.peekChar())) {
+            sb.append(it.nextChar());
+        }
+        try {
+            value = UnsignedInteger.valueOf(sb.toString());
+        } catch (Exception e) {
+            throw new Error("Not implemented");
+        }
+
+        Pos endPos = it.currentPos();
+        return new Token(TokenType.Uint, value, startPos, it.currentPos());
     }
 
     private Token lexIdentOrKeyword() throws TokenizeError {
@@ -60,7 +78,27 @@ public class Tokenizer {
         // -- 否则，返回标识符
         //
         // Token 的 Value 应填写标识符或关键字的字符串
-        throw new Error("Not implemented");
+
+        Pos startPos = it.nextPos();
+
+        StringBuilder sb = new StringBuilder();
+        while (Character.isLetterOrDigit(it.peekChar())) {
+            sb.append(it.nextChar());
+        }
+        var str = sb.toString();
+        TokenType tokenType = switch (str) {
+            case "BEGIN" -> TokenType.Begin;
+            case "END" -> TokenType.End;
+            case "VAR" -> TokenType.Var;
+            case "CONST" -> TokenType.Const;
+            case "PRINT" -> TokenType.Print;
+            default -> TokenType.Ident;
+        };
+
+        if (str.length()==0) {
+           throw new Error("Not implemented");
+        }
+        return new Token(tokenType, str, startPos, it.currentPos());
     }
 
     private Token lexOperatorOrUnknown() throws TokenizeError {
@@ -70,17 +108,32 @@ public class Tokenizer {
 
             case '-':
                 // 填入返回语句
-                throw new Error("Not implemented");
+                return new Token(TokenType.Minus, '-', it.previousPos(), it.currentPos());
+//                throw new Error("Not implemented");
 
             case '*':
                 // 填入返回语句
-                throw new Error("Not implemented");
+                return new Token(TokenType.Mult, '*', it.previousPos(), it.currentPos());
+//                throw new Error("Not implemented");
 
             case '/':
                 // 填入返回语句
-                throw new Error("Not implemented");
+                return new Token(TokenType.Div, '/', it.previousPos(), it.currentPos());
+//                throw new Error("Not implemented");
 
             // 填入更多状态和返回语句
+
+            case '=':
+                return new Token(TokenType.Equal, '=', it.previousPos(), it.currentPos());
+
+            case ';':
+                return new Token(TokenType.Semicolon, ';', it.previousPos(), it.currentPos());
+
+            case '(':
+                return new Token(TokenType.LParen, '(', it.previousPos(), it.currentPos());
+
+            case ')':
+                return new Token(TokenType.RParen, ')', it.previousPos(), it.currentPos());
 
             default:
                 // 不认识这个输入，摸了
