@@ -52,17 +52,13 @@ public class Tokenizer {
         // Token 的 Value 应填写数字的值
 
         Pos startPos = it.nextPos();
-        UnsignedInteger value;
+        int value;
 
         StringBuilder sb = new StringBuilder();
         while (Character.isDigit(it.peekChar())) {
             sb.append(it.nextChar());
         }
-        try {
-            value = UnsignedInteger.valueOf(sb.toString());
-        } catch (Exception e) {
-            throw new Error("Not implemented");
-        }
+        value = Integer.parseInt(sb.toString());
 
         Pos endPos = it.currentPos();
         return new Token(TokenType.Uint, value, startPos, it.currentPos());
@@ -136,6 +132,9 @@ public class Tokenizer {
                 return new Token(TokenType.RParen, ')', it.previousPos(), it.currentPos());
 
             default:
+                if (it.isEOF()) {
+                    return new Token(TokenType.EOF, "EOF", it.previousPos(), it.currentPos());
+                }
                 // 不认识这个输入，摸了
                 throw new TokenizeError(ErrorCode.InvalidInput, it.previousPos());
         }
