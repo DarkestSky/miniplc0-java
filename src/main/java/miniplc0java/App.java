@@ -69,6 +69,12 @@ public class App {
 
         Scanner scanner;
         scanner = new Scanner(input);
+
+        // Cheat
+        while (scanner.hasNext()) {
+            System.err.println(scanner.nextLine());
+        }
+
         var iter = new StringIter(scanner);
         var tokenizer = tokenize(iter);
 
