@@ -82,12 +82,12 @@ public class Tokenizer {
             sb.append(it.nextChar());
         }
         var str = sb.toString();
-        TokenType tokenType = switch (str.toUpperCase()) {
-            case "BEGIN" -> TokenType.Begin;
-            case "END" -> TokenType.End;
-            case "VAR" -> TokenType.Var;
-            case "CONST" -> TokenType.Const;
-            case "PRINT" -> TokenType.Print;
+        TokenType tokenType = switch (str) {
+            case "begin" -> TokenType.Begin;
+            case "end" -> TokenType.End;
+            case "var" -> TokenType.Var;
+            case "const" -> TokenType.Const;
+            case "print" -> TokenType.Print;
             default -> TokenType.Ident;
         };
 
