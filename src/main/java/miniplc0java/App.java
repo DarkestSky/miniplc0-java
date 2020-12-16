@@ -125,7 +125,6 @@ public class App {
     }
 
     private static Tokenizer tokenize(StringIter iter) {
-        var tokenizer = new Tokenizer(iter);
-        return tokenizer;
+        return new Tokenizer(iter);
     }
 }

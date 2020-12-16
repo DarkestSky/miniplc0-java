@@ -1,7 +1,5 @@
 package miniplc0java.tokenizer;
 
-import com.google.common.primitives.UnsignedInteger;
-import jdk.jfr.Unsigned;
 import miniplc0java.error.TokenizeError;
 import miniplc0java.error.ErrorCode;
 import miniplc0java.util.Pos;
